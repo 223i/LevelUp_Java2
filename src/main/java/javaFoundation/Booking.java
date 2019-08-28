@@ -1,6 +1,7 @@
 package javaFoundation;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 public class Booking {
     private Passenger passenger;
@@ -26,12 +27,12 @@ public class Booking {
     }
 
     public String bookingToJson (Booking booking){
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
         return gson.toJson(booking);
     }
 
-    public Booking passengerFromJson (String json){
-        Gson gson = new Gson();
+    public Booking bookingFromJson (String json){
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
         return gson.fromJson(json, Booking.class);
     }
 }

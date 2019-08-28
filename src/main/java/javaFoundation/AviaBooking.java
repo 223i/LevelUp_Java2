@@ -1,5 +1,8 @@
 package javaFoundation;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -44,6 +47,7 @@ public class AviaBooking {
 
 //        createBooking(newPassenger, allAirCompaniesWithFlights);
 
+        ArrayList<String> resultOfAllSerialisation = new ArrayList<>();
 
         Runnable target = new Runnable() {
             @Override
@@ -55,7 +59,7 @@ public class AviaBooking {
                     e.printStackTrace();
                 }
                 String resultOfSerial = newBooking.bookingToJson(newBooking);
-                System.out.println(resultOfSerial);
+                resultOfAllSerialisation.add(resultOfSerial);
             }
         };
 
@@ -69,7 +73,15 @@ public class AviaBooking {
         for (Thread tread:allThreads){
             tread.join();
         }
-        System.out.println("Finish");
+
+        //Deserialize and print
+        for (int i=0; i < resultOfAllSerialisation.size(); i++){
+            Gson newGson = new GsonBuilder().setPrettyPrinting().create();
+            String deserialisation = resultOfAllSerialisation.get(i);
+            Booking getBooking = newGson.fromJson(deserialisation, Booking.class);
+            System.out.println(getBooking);
+        }
+
     }
 
     public static Booking createBooking(Passenger passenger, ArrayList<AirCompany> allAirCompanies) throws Exception{
