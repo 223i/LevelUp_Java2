@@ -3,11 +3,8 @@ package javaFoundation;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import java.sql.SQLOutput;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Random;
-import java.util.Scanner;
 
 public class AviaBooking {
     public static void main(String[] args) throws InterruptedException {
@@ -37,13 +34,13 @@ public class AviaBooking {
         final Passenger newPassenger = createOnePassengerWithRandomData(firstNamesDictionary,lastName,gender,citizenship);
 
 
-        //Serialize passenger to json
-        String resultOfSerial = newPassenger.passengerToJson(newPassenger);
-        System.out.println(resultOfSerial);
-
-        //Deserialize json to passenger
-        Passenger resultOfDeSerial = newPassenger.passengerFromJson(resultOfSerial);
-        System.out.println(resultOfDeSerial);
+//        //Serialize passenger to json
+//        String resultOfSerial = newPassenger.passengerToJson(newPassenger);
+//        System.out.println(resultOfSerial);
+//
+//        //Deserialize json to passenger
+//        Passenger resultOfDeSerial = newPassenger.passengerFromJson(resultOfSerial);
+//        System.out.println(resultOfDeSerial);
 
 //        createBooking(newPassenger, allAirCompaniesWithFlights);
 
@@ -58,8 +55,11 @@ public class AviaBooking {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                String resultOfSerial = newBooking.bookingToJson(newBooking);
-                resultOfAllSerialisation.add(resultOfSerial);
+                synchronized (resultOfAllSerialisation){
+                    String resultOfSerial = newBooking.bookingToJson(newBooking);
+                    resultOfAllSerialisation.add(resultOfSerial);
+                }
+
             }
         };
 
@@ -67,21 +67,24 @@ public class AviaBooking {
         for (int i = 0; i < 10; i++){
             Thread treadForBooking = new Thread(target,  i + "Booking");
             treadForBooking.start();
-            allThreads.add(treadForBooking);
+            synchronized (allThreads){
+                allThreads.add(treadForBooking);
+            }
         }
-
         for (Thread tread:allThreads){
             tread.join();
         }
 
-        //Deserialize and print
-        for (int i=0; i < resultOfAllSerialisation.size(); i++){
-            Gson newGson = new GsonBuilder().setPrettyPrinting().create();
-            String deserialisation = resultOfAllSerialisation.get(i);
-            Booking getBooking = newGson.fromJson(deserialisation, Booking.class);
-            System.out.println(getBooking);
-        }
 
+            //Deserialize and print
+            for (int i = 0; i < resultOfAllSerialisation.size(); i++) {
+                synchronized (resultOfAllSerialisation) {
+                    Gson newGson = new GsonBuilder().setPrettyPrinting().create();
+                    String deserialization = resultOfAllSerialisation.get(i);
+                    Booking getBooking = newGson.fromJson(deserialization, Booking.class);
+                    System.out.println(getBooking);
+            }
+        }
     }
 
     public static Booking createBooking(Passenger passenger, ArrayList<AirCompany> allAirCompanies) throws Exception{

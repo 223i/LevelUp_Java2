@@ -8,13 +8,13 @@ public class Booking {
     private Flight flight;
     private AirCompany company;
 
-    Booking (Passenger passenger, Flight flight, AirCompany company){
+    Booking(Passenger passenger, Flight flight, AirCompany company){
         this.passenger = passenger;
         this.flight = flight;
         this.company = company;
     }
 
-    public Passenger getPassenger() {
+    public  Passenger getPassenger() {
         return passenger;
     }
 
