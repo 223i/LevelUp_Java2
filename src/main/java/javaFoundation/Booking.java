@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 public class Booking {
-    private Passenger passenger;
+//    private Passenger passenger;
     private Flight flight;
     private AirCompany company;
 
@@ -14,9 +14,9 @@ public class Booking {
         this.company = company;
     }
 
-    public  Passenger getPassenger() {
-        return passenger;
-    }
+//    public Passenger getPassenger() {
+//        return passenger;
+//    }
 
     public Flight getFlight() {
         return flight;
@@ -34,5 +34,11 @@ public class Booking {
     public Booking bookingFromJson (String json){
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         return gson.fromJson(json, Booking.class);
+    }
+
+    @Override
+    public String toString() {
+
+        return "{ Flight: " + this.flight + " }" ;
     }
 }

@@ -59,4 +59,11 @@ public class Flight {
         Gson gson = new Gson();
         return gson.fromJson(json, Flight.class);
     }
+
+    @Override
+    public String toString() {
+        return "{ AirCompany: " + this.nameOfAirCompany + " Datum: " + this.datum + " Departure time: " +
+                this.departureTime + " From: " + this.from + " To: " + this.to + " PlaneType: " + this.planeType +
+                " Board Number: " + this.boardNumber +" }";
+    }
 }

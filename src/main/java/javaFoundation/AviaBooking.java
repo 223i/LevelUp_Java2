@@ -71,10 +71,11 @@ public class AviaBooking {
                 allThreads.add(treadForBooking);
             }
         }
-        for (Thread tread:allThreads){
-            tread.join();
+        synchronized (allThreads){
+            for (Thread tread:allThreads){
+                tread.join();
+            }
         }
-
 
             //Deserialize and print
             for (int i = 0; i < resultOfAllSerialisation.size(); i++) {
@@ -82,7 +83,7 @@ public class AviaBooking {
                     Gson newGson = new GsonBuilder().setPrettyPrinting().create();
                     String deserialization = resultOfAllSerialisation.get(i);
                     Booking getBooking = newGson.fromJson(deserialization, Booking.class);
-                    System.out.println(getBooking);
+                    System.out.println(getBooking.toString());
             }
         }
     }
@@ -96,13 +97,13 @@ public class AviaBooking {
         for (AirCompany airCompany : allAirCompanies){
             for(Flight everyFlight : airCompany.getAllFlights()){
                 if (everyFlight.getFrom().equals(from) && everyFlight.getTo().equals(to)){
-                    newBooking = new Booking(passenger,everyFlight, airCompany);
+                    newBooking = new Booking(everyFlight, airCompany);
                     passenger.appendCreatedBooking(newBooking);
 //                    System.out.println(passenger.getFirstName() + " " + passenger.getSecondName() + " " + everyFlight.getDatum() + " " + everyFlight.getDepartureTime() +" "+ everyFlight.getFrom()+ " "
 //                            + everyFlight.getTo()+ " "+ everyFlight.getPlaneType()+ " " + everyFlight.getBoardNumber() + " " + airCompany.getNameOfAirCompany());
                     return newBooking;
                 } else{
-                    newBooking = new Booking(passenger, airCompany.getAllFlights().get(random.nextInt(airCompany.getAllFlights().size())), airCompany); ;
+                    newBooking = new Booking(airCompany.getAllFlights().get(random.nextInt(airCompany.getAllFlights().size())), airCompany); ;
                     passenger.appendCreatedBooking(newBooking);
                     return newBooking;
                 }
